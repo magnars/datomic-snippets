@@ -18,7 +18,10 @@ datomic-snippets in your path somewhere:
 
 ## Usage
 
-TODO: Write some stuff about available snippets.
+ - `dsa` Insert a **d**atomic **s**chema **a**ttribute
+ - `dsf` Insert a **d**atomic **s**chema **f**unction
+ - `dst` List all **d**atomic **s**chema **t**ypes
+ - `:db` List additional attribute attributes.
 
 ## Setup
 
