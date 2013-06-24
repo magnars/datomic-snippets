@@ -69,7 +69,8 @@
   (cdr (assoc key alist)))
 
 (defun datomic-snippets/show-docs (id)
-  (message (-aget datomic-snippets/docstrings id)))
+  (message (-aget datomic-snippets/docstrings id))
+  nil)
 
 (defun datomic-snippets/closest-datomic-identifer ()
   (save-excursion
