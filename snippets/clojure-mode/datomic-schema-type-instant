@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-instant
+# key: dst
+# --
+:db.type/instant`
+(datomic-snippets/show-docs ":db.type/instant")`

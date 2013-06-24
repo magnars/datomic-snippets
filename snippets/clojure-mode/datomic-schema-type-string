@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-string
+# key: dst
+# --
+:db.type/string`
+(datomic-snippets/show-docs ":db.type/string")`

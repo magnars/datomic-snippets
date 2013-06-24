@@ -33,112 +33,52 @@
 (require 's)
 
 ;;;###autoload
-(defun ng-snip-show-docs-at-point ()
+(defun datomic-snippets-show-docs-at-point ()
   (interactive)
-  (ng-snip/show-or-browse-docs (ng-snip/closest-ng-identifer)))
+  (datomic-snippets/show-docs (datomic-snippets/closest-datomic-identifer)))
 
-(defvar ng-directive-docstrings
-  '(("ng-app" . "Auto-bootstraps an application, with optional module to load.")
-    ("ng-bind" . "Replace text content of element with value of given expression.")
-    ("ng-bind-html-unsafe" . "Set innerHTML of element to unsanitized value of given expression.")
-    ("ng-bind-template" . "Replace text content of element with given template.")
-    ("ng-change" . "Eval the given expression when user changes the input. Requires ng-model.")
-    ("ng-checked" . "Uses given expression to determine checked-state of checkbox.")
-    ("ng-class" . "Sets class names on element based on given expression.")
-    ("ng-class-even" . "Like ng-class, but only on even rows. Requires ng-repeat.")
-    ("ng-class-odd" . "Like ng-class, but only on odd rows. Requires ng-repeat.")
-    ("ng-click" . "Eval the given expression when element is clicked.")
-    ("ng-cloak" . "Hides the element contents until compiled by angular.")
-    ("ng-controller" . "Assign controller to this element, along with a new scope.")
-    ("ng-csp" . "Enables Content Security Policy support. Should be on same element as ng-app.")
-    ("ng-dblclick" . "Eval the given expression when element is double clicked.")
-    ("ng-disabled" . "Uses given expression to determine disabled-state of element.")
-    ("ng-form" . "Nestable alias of the form directive.")
-    ("ng-hide" . "Hides the element if the expression is truthy.")
-    ("ng-href" . "Avoids bad URLs on links that are clicked before angular compiles them.")
-    ("ng-include" . "Fetches, compiles and includes an external HTML fragment.")
-    ("ng-init" . "Evals expression before executing template during bootstrap.")
-    ("ng-list" . "Text input that converts between comma-separated string and an array of strings.")
-    ("ng-model" . "Sets up two-way data binding. Works with input, select and textarea.")
-    ("ng-mousedown" . "Eval the given expression on mousedown.")
-    ("ng-mouseenter" . "Eval the given expression on mouseenter.")
-    ("ng-mouseleave" . "Eval the given expression on mouseleave.")
-    ("ng-mousemove" . "Eval the given expression on mousemove.")
-    ("ng-mouseover" . "Eval the given expression on mouseover.")
-    ("ng-mouseup" . "Eval the given expression on mouseup.")
-    ("ng-multiple" . "Uses given expression to determine multiple-state of select element.")
-    ("ng-non-bindable" . "Makes angular ignore {{bindings}} inside element.")
-    ("ng-options" . "Populates select options from a list or object.")
-    ("ng-pluralize" . "Helps change wording based on a number.")
-    ("ng-readonly" . "Uses given expression to determine readonly-state of element.")
-    ("ng-repeat" . "Repeats template for every item in a list.")
-    ("ng-selected" . "Uses given expression to determine selected-state of option element.")
-    ("ng-show" . "Hides the element if the expression is falsy.")
-    ("ng-src" . "Stops browser from fetching images with {{templates}} in the URL.")
-    ("ng-style" . "Sets style attributes from an object of DOM style properties. ")
-    ("ng-submit" . "Eval the given expression when form is submitted, and prevent default.")
-    ("ng-switch" . "Switch on given expression to conditionally change DOM structure.")
-    ("ng-switch-when" . "Include this element if value matches ng-switch on expression.")
-    ("ng-transclude" . "Signifies where to insert transcluded DOM.")
-    ("ng-view" . "Signifies where route views are shown.")))
+(defvar datomic-snippets/docstrings
+  '((":db.type/string" . "Value type for strings.")
+    (":db.type/boolean" . "Boolean value type.")
+    (":db.type/long" . "Fixed integer value type. Same semantics as a Java long: 64 bits wide, two's complement binary representation.")
+    (":db.type/bigint" . "Value type for arbitrary precision integers. Maps to java.math.BigInteger on Java platforms.")
+    (":db.type/float" . "Floating point value type. Same semantics as a Java float: single-precision 32-bit IEEE 754 floating point.")
+    (":db.type/double" . "Floating point value type. Same semantics as a Java double: double-precision 64-bit IEEE 754 floating point.")
+    (":db.type/bigdec" . "Value type for arbitrary precision floating point numbers. Maps to java.math.BigDecimal on Java platforms.")
+    (":db.type/ref" . "Value type for references. All references from one entity to another are through attributes with this value type.")
+    (":db.type/instant" . "Value type for instants in time. Stored internally as a number of milliseconds since midnight, January 1, 1970 UTC. Maps to java.util.Date on Java platforms.")
+    (":db.type/uuid" . "Value type for UUIDs. Maps to java.util.UUID on Java platforms.")
+    (":db.type/uri" . "Value type for URIs. Maps to java.net.URI on Java platforms.")
+    (":db.type/bytes" . "Value type for small binary data. Maps to byte array on Java platforms.")
+    (":db/cardinality" . "Specifies whether an attribute associates a single value or a set of values with an entity.")
+    (":db.cardinality/one" . "The attribute is single valued, it associates a single value with an entity.")
+    (":db.cardinality/many" . "The attribute is multi valued, it associates a set of values with an entity.")
+    (":db/doc" . "Specifies a documentation string.")
+    (":db/unique" . "Specifies a uniqueness constraint for the values of an attribute. Setting an attribute :db/unique also implies :db/index.")
+    (":db.unique/value" . "The attribute value is unique to each entity; attempts to insert a duplicate value for a different entity id will fail")
+    (":db.unique/identity" . "The attribute value is unique to each entity and upsert is enabled; attempts to insert a duplicate value for a temporary entity id will cause all attributes associated with that temporary id to be merged with the entity already in the database.")
+    (":db/index" . "Specifies a boolean value indicating that an index should be generated for this attribute. Defaults to false.")
+    (":db/fulltext" . "Specifies a boolean value indicating that a fulltext search index should be generated for the attribute. Defaults to false.")
+    (":db/isComponent" . "Specifies that an attribute whose type is :db.type/ref refers to a subcomponent of the entity to which the attribute is applied. When you retract an entity with :db.fn/retractEntity, all subcomponents are also retracted. When you touch an entity, all its subcomponent entities are touched recursively. Defaults to nil.")
+    (":db/noHistory" . "Specifies a boolean value indicating whether past values of an attribute should not be retained. Defaults to false.")))
 
-(defvar ng-snip/docs-indirection
-  '(("ng-options" . "select")
-    ("ng-switch-when" . "ng-switch")))
-
-(defvar ng-snip/directive-root-url
-  "http://docs.angularjs.org/api/ng.directive:")
+(defvar datomic-snippets/docstrings-regexp
+  (regexp-opt (-map 'car datomic-snippets/docstrings)))
 
 (defun -aget (alist key)
   (cdr (assoc key alist)))
 
-(defun ng-snip/directive-to-docs (directive)
-  (let ((name (car directive))
-        (docstring (cdr directive)))
-    (list name
-          :docstring docstring
-          :docurl (s-with (or (-aget ng-snip/docs-indirection name) name)
-                    (s-lower-camel-case)
-                    (concat ng-snip/directive-root-url)))))
+(defun datomic-snippets/show-docs (id)
+  (message (-aget datomic-snippets/docstrings id)))
 
-(setq ng-docs (-map 'ng-snip/directive-to-docs ng-directive-docstrings))
-
-(defun ng-snip/docs-value (id prop)
-  (plist-get (-aget ng-docs id) prop))
-
-(defvar ng-snip/last-docs-message nil)
-
-(defun ng-snip/forget-last-docs-message ()
-  (setq ng-snip/last-docs-message nil))
-
-(defun ng-snip/docs (id)
-  (message (ng-snip/docs-value id :docstring))
-  (setq ng-snip/last-docs-message id)
-  (run-with-timer 10.0 nil 'ng-snip/forget-last-docs-message)
-  nil)
-
-(defun ng-snip/show-or-browse-docs (id)
-  (if (s-equals? ng-snip/last-docs-message id)
-      (ng-snip/browse-docs id)
-    (ng-snip/docs id)))
-
-(defun ng-snip/browse-docs (id)
-  (browse-url (ng-snip/docs-value id :docurl)))
-
-(defun ng-snip/maybe-space-after-attr ()
-  (unless (looking-at "[ />]\\|$")
-    (insert " ")))
-
-(defun ng-snip/closest-ng-identifer ()
+(defun datomic-snippets/closest-datomic-identifer ()
   (save-excursion
-    (forward-char 3)
-    (search-backward "ng-")
-    (unless (looking-at "ng-[a-z\-]+")
-      (error "No angular identifier at point"))
-    (match-string 0)))
+    (search-forward " ")
+    (search-backward-regexp datomic-snippets/docstrings-regexp)
+    (match-string-no-properties 0)))
 
 (setq datomic-snippets-root (file-name-directory (or load-file-name
-                                                        (buffer-file-name))))
+                                                     (buffer-file-name))))
 
 ;;;###autoload
 (defun datomic-snippets-initialize ()

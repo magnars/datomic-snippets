@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-bytes
+# key: dst
+# --
+:db.type/bytes`
+(datomic-snippets/show-docs ":db.type/bytes")`

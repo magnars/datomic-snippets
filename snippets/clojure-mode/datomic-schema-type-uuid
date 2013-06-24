@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-uuid
+# key: dst
+# --
+:db.type/uuid`
+(datomic-snippets/show-docs ":db.type/uuid")`

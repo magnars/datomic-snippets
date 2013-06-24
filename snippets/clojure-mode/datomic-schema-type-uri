@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-uri
+# key: dst
+# --
+:db.type/uri`
+(datomic-snippets/show-docs ":db.type/uri")`

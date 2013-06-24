@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-float
+# key: dst
+# --
+:db.type/float`
+(datomic-snippets/show-docs ":db.type/float")`

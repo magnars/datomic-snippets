@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-type-bigdec
+# key: dst
+# --
+:db.type/bigdec`
+(datomic-snippets/show-docs ":db.type/bigdec")`
