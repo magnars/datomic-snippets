@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-attr-noHistory
+# key: :db
+# --
+:db/noHistory true`
+(datomic-snippets/show-docs ":db/noHistory")`

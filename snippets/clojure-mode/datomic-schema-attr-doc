@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-attr-doc
+# key: :db
+# --
+:db/doc true`
+(datomic-snippets/show-docs ":db/doc")`
