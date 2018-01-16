@@ -2,5 +2,5 @@
 # name: datomic-schema-attr-unique
 # key: :db
 # --
-:db/unique :db.unique/value`
+:db/unique :db.unique/identity`
 (datomic-snippets/show-docs ":db/unique")`
