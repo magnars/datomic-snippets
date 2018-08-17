@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-unique-identity
+# key: :dbui
+# --
+:db/unique :db.unique/identity

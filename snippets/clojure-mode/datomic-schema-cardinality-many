@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-cardinality-many
+# key: :dbcm
+# --
+:db/cardinality :db.cardinality/many

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: datomic-schema-value-type-ref
+# key: :dbvr
+# --
+:db/valueType :db.type/ref
